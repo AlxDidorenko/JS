@@ -2,8 +2,28 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const pool = require('./config/config')
+const bodyParser=require('body-parser')
 
-console.log(process.env)
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
+
+app.route('/api/students').post((request, response)=>{
+    let{name, surname}=request.body
+
+    pool.query('Insert into students (name, surname) Values (?,?)',
+    [name, surname], (err, result)=> {
+        console.log(err)
+        response.send(result)
+    })
+})
+
+app.route('/api/students/:n_z').delete((request, response)=>{
+    pool.query('Delete from students where n_z=?', [request.params.n_z],
+    (err, result)=>{
+        console.log(err)
+        response.send(result)
+    })
+})
 
 app.route('/').get((request, response) => {
     response.send('Hello world!')
