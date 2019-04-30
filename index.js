@@ -25,6 +25,17 @@ app.route('/api/students/:n_z').delete((request, response)=>{
     })
 })
 
+app.route('/api/students/:n_z').put((request, response)=> {
+    let {surname}=request.body
+
+    pool.query('Update srudents SET surname = ? where n_z = ?',
+    [surname, request.params.n_z], (err, result) => {
+        console.log(err)
+        response.send(result)
+    }
+    )
+})
+
 app.route('/').get((request, response) => {
     response.send('Hello world!')
 })
